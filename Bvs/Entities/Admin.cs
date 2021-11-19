@@ -13,6 +13,7 @@ namespace Bvs.Entities
         public string Email { get; set; }
         public string Foto { get; set; }
         public string Rolle { get; set; }
-        public string Passwort { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
     }
 }
