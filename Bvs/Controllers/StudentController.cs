@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace Bvs_API.Controllers
 {   
-    [ApiController]
-    [Route("Bvs_Api/[controller]")]
-    public class StudentController : ControllerBase
+    public class StudentController : BaseApiController
     {
         private readonly DataContext _context;
 
