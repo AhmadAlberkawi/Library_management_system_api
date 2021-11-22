@@ -8,6 +8,7 @@ namespace Bvs.Entities
     public class Admin
     {
         public int Id { get; set; }
+        public string Username { get; set; }
         public string Name { get; set; }
         public string Vorname { get; set; }
         public string Email { get; set; }

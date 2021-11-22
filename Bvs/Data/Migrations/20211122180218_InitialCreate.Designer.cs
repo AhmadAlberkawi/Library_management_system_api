@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bvs_API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211119191552_InitialCreate")]
+    [Migration("20211122180218_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,9 @@ namespace Bvs_API.Data.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Rolle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Vorname")

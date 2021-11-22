@@ -21,17 +21,23 @@ namespace Bvs_API.Controllers
         }
 
         [HttpPost("addAdmin")]
-        public async Task<ActionResult<Admin>> AddAdmin(AdminDto adminDto)
+        public async Task<ActionResult<Admin>> AddAdmin(AdminRegisterDto adminDto)
         {
-            if(await AdminExists(adminDto.Name))
+            if(await AdminNameExists(adminDto.Username))
             {
-                return BadRequest("Admin Name is taken.");
+                return BadRequest("Admin username is taken.");
+            }
+
+            if (await AdminEmailExists(adminDto.Email))
+            {
+                return BadRequest("Admin Email is taken.");
             }
 
             using var hmac = new HMACSHA512();
 
             var admin = new Admin
             {
+                Username = adminDto.Username,
                 Name = adminDto.Name,
                 Vorname = adminDto.Vorname,
                 Email = adminDto.Email,
@@ -47,9 +53,44 @@ namespace Bvs_API.Controllers
             return admin;
         }
 
-        private async Task<bool> AdminExists(string name)
+        private async Task<bool> AdminNameExists(string username)
         {
-            return await _context.Admin.AnyAsync(x => x.Name == name.ToLower());
+            return await _context.Admin.AnyAsync(x => x.Username.ToLower() == username.ToLower());
+        }
+
+        private async Task<bool> AdminEmailExists(string email)
+        {
+            return await _context.Admin.AnyAsync(x => x.Email.ToLower() == email.ToLower());
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<Admin>> LoginAdmin(AdminLoginDto adminLoginDto)
+        {
+            var admin = await _context.Admin.SingleOrDefaultAsync(x => x.Username == adminLoginDto.UsernameOrEmail);
+
+            if(admin == null)
+            {
+                admin = await _context.Admin.SingleOrDefaultAsync(x => x.Email == adminLoginDto.UsernameOrEmail);
+            }
+                
+            if(admin == null)
+            {
+                return Unauthorized("Username or email is invalid.");
+            }
+
+            using var hmac = new HMACSHA512(admin.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(adminLoginDto.Password));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != admin.PasswordHash[i])
+                { 
+                    return Unauthorized("Password is invalid.");
+                }
+            }
+
+            return admin;
         }
     }
 }

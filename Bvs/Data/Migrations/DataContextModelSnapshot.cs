@@ -44,6 +44,9 @@ namespace Bvs_API.Data.Migrations
                     b.Property<string>("Rolle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Vorname")
                         .HasColumnType("nvarchar(max)");
 
