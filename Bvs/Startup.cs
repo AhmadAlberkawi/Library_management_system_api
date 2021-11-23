@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Bvs_API.Interfaces;
+using Bvs_API.Services;
 
 namespace Bvs
 {
@@ -28,7 +30,7 @@ namespace Bvs
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddScoped<ITokenService, TokenService>();
             services.AddControllers();
             services.AddCors();
            

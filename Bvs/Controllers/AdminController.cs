@@ -1,6 +1,7 @@
 ﻿using Bvs.Entities;
 using Bvs_API.Data;
 using Bvs_API.DTOs;
+using Bvs_API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,13 +16,16 @@ namespace Bvs_API.Controllers
     public class AdminController: BaseApiController
     {
         private readonly DataContext _context;
-        public AdminController(DataContext context)
+        private readonly ITokenService _tokenService;
+
+        public AdminController(DataContext context, ITokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
         [HttpPost("addAdmin")]
-        public async Task<ActionResult<Admin>> AddAdmin(AdminRegisterDto adminDto)
+        public async Task<ActionResult<AdminDto>> AddAdmin(AdminRegisterDto adminDto)
         {
             if(await AdminNameExists(adminDto.Username))
             {
@@ -50,7 +54,16 @@ namespace Bvs_API.Controllers
             _context.Admin.Add(admin);
             await _context.SaveChangesAsync();
 
-            return admin;
+            return new AdminDto
+            {
+                Username = admin.Username,
+                Name = admin.Name,
+                Vorname = admin.Vorname,
+                Email = admin.Email,
+                Foto = admin.Foto,
+                Rolle = admin.Rolle,
+                Token = _tokenService.CreateToken(admin)
+            };
         }
 
         private async Task<bool> AdminNameExists(string username)
@@ -64,7 +77,7 @@ namespace Bvs_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<Admin>> LoginAdmin(AdminLoginDto adminLoginDto)
+        public async Task<ActionResult<AdminDto>> LoginAdmin(AdminLoginDto adminLoginDto)
         {
             var admin = await _context.Admin.SingleOrDefaultAsync(x => x.Username == adminLoginDto.UsernameOrEmail);
 
@@ -90,7 +103,16 @@ namespace Bvs_API.Controllers
                 }
             }
 
-            return admin;
+            return new AdminDto
+            {
+                Username = admin.Username,
+                Name = admin.Name,
+                Vorname = admin.Vorname,
+                Email = admin.Email,
+                Foto = admin.Foto,
+                Rolle = admin.Rolle,
+                Token = _tokenService.CreateToken(admin)
+            };
         }
     }
 }
