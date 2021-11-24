@@ -2,6 +2,7 @@
 using Bvs_API.Data;
 using Bvs_API.DTOs;
 using Bvs_API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,7 +26,7 @@ namespace Bvs_API.Controllers
         }
 
         [HttpPost("addAdmin")]
-        public async Task<ActionResult<AdminDto>> AddAdmin(AdminRegisterDto adminDto)
+        public async Task<ActionResult<AdminTokenDto>> AddAdmin(AdminRegisterDto adminDto)
         {
             if(await AdminNameExists(adminDto.Username))
             {
@@ -54,7 +55,7 @@ namespace Bvs_API.Controllers
             _context.Admin.Add(admin);
             await _context.SaveChangesAsync();
 
-            return new AdminDto
+            return new AdminTokenDto
             {
                 Username = admin.Username,
                 Name = admin.Name,
@@ -75,9 +76,9 @@ namespace Bvs_API.Controllers
         {
             return await _context.Admin.AnyAsync(x => x.Email.ToLower() == email.ToLower());
         }
-
+        
         [HttpPost("login")]
-        public async Task<ActionResult<AdminDto>> LoginAdmin(AdminLoginDto adminLoginDto)
+        public async Task<ActionResult<AdminTokenDto>> LoginAdmin(AdminLoginDto adminLoginDto)
         {
             var admin = await _context.Admin.SingleOrDefaultAsync(x => x.Username == adminLoginDto.UsernameOrEmail);
 
@@ -103,7 +104,7 @@ namespace Bvs_API.Controllers
                 }
             }
 
-            return new AdminDto
+            return new AdminTokenDto
             {
                 Username = admin.Username,
                 Name = admin.Name,
@@ -113,6 +114,14 @@ namespace Bvs_API.Controllers
                 Rolle = admin.Rolle,
                 Token = _tokenService.CreateToken(admin)
             };
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IEnumerable<AdminDto>> GetAdmins()
+        {
+            return await _context.Admin
+                .Select(x => new AdminDto(x.Id, x.Name, x.Vorname, x.Email, x.Foto, x.Rolle)).ToListAsync();
         }
     }
 }

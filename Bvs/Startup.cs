@@ -15,6 +15,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Bvs_API.Interfaces;
 using Bvs_API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Bvs_API.Extensions;
 
 namespace Bvs
 {
@@ -30,19 +34,10 @@ namespace Bvs
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ITokenService, TokenService>();
+            ApplicationServiceExtensions.AddApplicationServices(services, _config);
+            IdentitiyServiceExtensions.AddIdentitiyServices(services, _config);
             services.AddControllers();
             services.AddCors();
-           
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlServer(_config.GetConnectionString("BVS_DB"));
-            });
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bvs", Version = "v1" });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +55,8 @@ namespace Bvs
             app.UseRouting();
 
             app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
