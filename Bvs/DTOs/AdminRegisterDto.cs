@@ -16,8 +16,8 @@ namespace Bvs_API.DTOs
         public string Vorname { get; set; }
         [Required]
         public string Email { get; set; }
-        [Required]
-        public string Foto { get; set; }
+     //   [Required]
+     //   public string Foto { get; set; }
         [Required]
         public string Rolle { get; set; }
         [Required]

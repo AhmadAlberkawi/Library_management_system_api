@@ -46,7 +46,7 @@ namespace Bvs_API.Controllers
                 Name = adminDto.Name,
                 Vorname = adminDto.Vorname,
                 Email = adminDto.Email,
-                Foto = adminDto.Foto,
+                Foto = "",
                 Rolle = adminDto.Rolle,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(adminDto.Password)),
                 PasswordSalt = hmac.Key
