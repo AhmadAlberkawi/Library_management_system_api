@@ -116,12 +116,29 @@ namespace Bvs_API.Controllers
             };
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<IEnumerable<AdminDto>> GetAdmins()
         {
             return await _context.Admin
                 .Select(x => new AdminDto(x.Id, x.Name, x.Vorname, x.Email, x.Foto, x.Rolle)).ToListAsync();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteAdmin(int id)
+        {
+            var admin = await _context.Admin.FindAsync(id);
+
+            if(admin != null)
+            {
+                _context.Admin.Remove(admin);
+                await _context.SaveChangesAsync();
+                return Accepted();
+            }
+            else
+            {
+                return NotFound($"Admin with Id= {id} not found");
+            } 
         }
     }
 }
