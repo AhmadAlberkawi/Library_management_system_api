@@ -60,7 +60,7 @@ namespace Bvs_API.Controllers
                 student.Email = st.Email;
                 student.MatrikelNum = st.MatrikelNum;
                 student.BibNum = st.BibNum;
-                student.Foto = st.Foto;
+                student.Foto = "";
 
                 await _context.SaveChangesAsync();
                 return Accepted();
@@ -91,7 +91,7 @@ namespace Bvs_API.Controllers
                 Email = studentDto.Email,
                 MatrikelNum = studentDto.MatrikelNum,
                 BibNum = studentDto.BibNum,
-                Foto = studentDto.Foto
+                Foto = ""
             };
 
             _context.Student.Add(student);

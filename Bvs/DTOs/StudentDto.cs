@@ -18,7 +18,7 @@ namespace Bvs_API.DTOs
         public int MatrikelNum { get; set; }
         [Required]
         public int BibNum { get; set; }
-        [Required]
-        public string Foto { get; set; }
+      //  [Required]
+      //  public string Foto { get; set; }
     }
 }
