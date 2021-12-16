@@ -12,9 +12,4 @@
         public string Autor { get; set; }
         public string Kategorie { get; set; }
     }
-
-
-
-
-
 }

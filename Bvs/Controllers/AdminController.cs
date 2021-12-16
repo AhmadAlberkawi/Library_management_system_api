@@ -53,6 +53,11 @@ namespace Bvs_API.Controllers
             };
 
             _context.Admin.Add(admin);
+
+            var adminCount = await _context.Admin.CountAsync();
+            var numberOverview = await _context.NumberOverview.FirstAsync();
+            numberOverview.AnzahlAdmin = adminCount;
+
             await _context.SaveChangesAsync();
 
             return new AdminTokenDto
@@ -132,6 +137,11 @@ namespace Bvs_API.Controllers
             if(admin != null)
             {
                 _context.Admin.Remove(admin);
+
+                var adminCount = await _context.Admin.CountAsync();
+                var numberOverview = await _context.NumberOverview.FirstAsync();
+                numberOverview.AnzahlAdmin = adminCount;
+
                 await _context.SaveChangesAsync();
                 return Accepted();
             }

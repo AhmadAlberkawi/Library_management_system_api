@@ -40,11 +40,17 @@ namespace Bvs_API.Controllers
             {
                 _context.Student.Remove(student);
                 await _context.SaveChangesAsync();
+
+                var studentCount = await _context.Student.CountAsync();
+                var numberOverview =  await _context.NumberOverview.FirstAsync();
+                numberOverview.AnzahlStudent = studentCount;
+                await _context.SaveChangesAsync();
+
                 return Accepted();
             }
             else
             {
-                return NotFound($"Student with Id= {id} not found");
+                return NotFound($"Student mit Id= {id} wurde nicht gefunden.");
             }
         }
 
@@ -67,7 +73,7 @@ namespace Bvs_API.Controllers
             }
             else
             {
-                return NotFound($"Student with Id= {st.Id} not found");
+                return NotFound($"Student mit Id= {st.Id} wurde nicht gefunden.");
             }
         }
 
@@ -96,6 +102,12 @@ namespace Bvs_API.Controllers
 
             _context.Student.Add(student);
             await _context.SaveChangesAsync();
+
+            var studentCount = await _context.Student.CountAsync();
+            var numberOverview = await _context.NumberOverview.FirstAsync();
+            numberOverview.AnzahlStudent = studentCount;
+            await _context.SaveChangesAsync();
+
             return Accepted();
         }
     }
