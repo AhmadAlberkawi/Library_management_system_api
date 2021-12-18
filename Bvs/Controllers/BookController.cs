@@ -50,9 +50,7 @@ namespace Bvs_API.Controllers
                 _context.Book.Add(book);
                 await _context.SaveChangesAsync();
 
-                var booksCount = await _context.Book.CountAsync();
-                var overView = await _context.NumberOverview.FirstAsync();
-                overView.AnzahlBook = booksCount;
+                await BookCount();
                 await _context.SaveChangesAsync();
 
                 return Accepted();
@@ -104,9 +102,7 @@ namespace Bvs_API.Controllers
                 _context.Book.Remove(book);
                 await _context.SaveChangesAsync();
 
-                var booksCount = await _context.Book.CountAsync();
-                var overView = await _context.NumberOverview.FirstAsync();
-                overView.AnzahlBook = booksCount;
+                await BookCount();
                 await _context.SaveChangesAsync();
 
                 return Accepted();
@@ -122,7 +118,7 @@ namespace Bvs_API.Controllers
             return await _context.Book.AnyAsync(x => x.Isbn.ToLower() == isbn.ToLower());
         }
 
-        private async void BookCount()
+        private async Task BookCount()
         {
             var booksCount = await _context.Book.CountAsync();
             var overView = await _context.NumberOverview.FirstAsync();

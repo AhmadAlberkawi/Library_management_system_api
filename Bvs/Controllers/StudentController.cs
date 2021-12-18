@@ -31,27 +31,36 @@ namespace Bvs_API.Controllers
             return await _context.Student.FindAsync(id);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> DeleteStudent(int id)
+        [HttpPost("addStudent")]
+        public async Task<ActionResult> AddStudent(StudentDto studentDto)
         {
-            var student = await _context.Student.FindAsync(id);
-
-            if (student != null)
+            if (await _context.Student.AnyAsync(x => x.MatrikelNum == studentDto.MatrikelNum))
             {
-                _context.Student.Remove(student);
-                await _context.SaveChangesAsync();
-
-                var studentCount = await _context.Student.CountAsync();
-                var numberOverview =  await _context.NumberOverview.FirstAsync();
-                numberOverview.AnzahlStudent = studentCount;
-                await _context.SaveChangesAsync();
-
-                return Accepted();
+                return BadRequest($"Matrikelnummer {studentDto.MatrikelNum} ist bereits existiert!");
             }
-            else
+
+            if (await _context.Student.AnyAsync(x => x.BibNum == studentDto.BibNum))
             {
-                return NotFound($"Student mit Id= {id} wurde nicht gefunden.");
+                return BadRequest($"Bibliotheknummber {studentDto.BibNum} ist bereits existiert!");
             }
+
+            var student = new Student
+            {
+                Name = studentDto.Name,
+                Vorname = studentDto.Vorname,
+                Email = studentDto.Email,
+                MatrikelNum = studentDto.MatrikelNum,
+                BibNum = studentDto.BibNum,
+                Foto = ""
+            };
+
+            _context.Student.Add(student);
+            await _context.SaveChangesAsync();
+
+            await StudentCount();
+            await _context.SaveChangesAsync();
+
+            return Accepted();
         }
 
         [HttpPut("editStudent")]
@@ -77,38 +86,33 @@ namespace Bvs_API.Controllers
             }
         }
 
-        [HttpPost("addStudent")]
-        public async Task<ActionResult> AddStudent(StudentDto studentDto)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteStudent(int id)
         {
-            if(await _context.Student.AnyAsync(x => x.MatrikelNum == studentDto.MatrikelNum))
+            var student = await _context.Student.FindAsync(id);
+
+            if (student != null)
             {
-                return BadRequest($"Matrikelnummer {studentDto.MatrikelNum} ist bereits existiert!");
+                _context.Student.Remove(student);
+                await _context.SaveChangesAsync();
+
+                await StudentCount();
+                await _context.SaveChangesAsync();
+
+                return Accepted();
             }
-
-            if(await _context.Student.AnyAsync(x => x.BibNum == studentDto.BibNum))
+            else
             {
-                return BadRequest($"Bibliotheknummber {studentDto.BibNum} ist bereits existiert!");
+                return NotFound($"Student mit Id= {id} wurde nicht gefunden.");
             }
+        }
 
-            var student = new Student
-            {
-                Name = studentDto.Name,
-                Vorname = studentDto.Vorname,
-                Email = studentDto.Email,
-                MatrikelNum = studentDto.MatrikelNum,
-                BibNum = studentDto.BibNum,
-                Foto = ""
-            };
-
-            _context.Student.Add(student);
-            await _context.SaveChangesAsync();
-
+       private async Task StudentCount()
+       {
             var studentCount = await _context.Student.CountAsync();
             var numberOverview = await _context.NumberOverview.FirstAsync();
             numberOverview.AnzahlStudent = studentCount;
-            await _context.SaveChangesAsync();
+       }
 
-            return Accepted();
-        }
-    }
+     }
 }

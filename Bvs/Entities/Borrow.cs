@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Bvs.Entities
 {
-    [Keyless]
     public class Borrow
     {
+        public int Id { get; set; }
         public Student students { get; set; }
         public Book Books { get; set; }
     }
