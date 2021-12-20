@@ -19,9 +19,9 @@ namespace Bvs_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NumberOverview>>> Getoverview()
+        public async Task<ActionResult<NumberOverview>> Getoverview()
         {
-            return await _context.NumberOverview.ToListAsync();
+            return await _context.NumberOverview.FirstAsync();
         }
     }
 }
