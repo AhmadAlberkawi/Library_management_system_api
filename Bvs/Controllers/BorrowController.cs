@@ -46,7 +46,7 @@ namespace Bvs_API.Controllers
                                  from br in _context.Borrow
                                  where br.Books == bk && br.students == st
                                  orderby bk.Title
-                                 select new {br.Id , bk.Title, bk.Isbn , bk.Verlag, bk.Autor, st.Name};
+                                 select new {br.Id ,bk.B_foto , bk.Title, bk.Isbn , bk.Verlag, bk.Autor, st.Name};
 
             return await BookBorrowList.ToListAsync();
         }        [HttpGet("{id}")]
