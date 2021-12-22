@@ -8,6 +8,6 @@ namespace Bvs_API.DTOs
     public class BorrowDto
     {
         public int StudentId { get; set; }
-        public int BookdId { get; set; }
+        public int BookId { get; set; }
     }
 }

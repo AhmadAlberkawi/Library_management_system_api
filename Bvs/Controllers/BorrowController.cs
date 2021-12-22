@@ -24,7 +24,7 @@ namespace Bvs_API.Controllers
         {
             Student student = await _context.Student.FindAsync(borrowDto.StudentId);
 
-            Book book = await _context.Book.FindAsync(borrowDto.BookdId);
+            Book book = await _context.Book.FindAsync(borrowDto.BookId);
 
             await _context.Borrow.AddAsync(new Borrow
             {
@@ -59,7 +59,7 @@ namespace Bvs_API.Controllers
                                  from br in _context.Borrow
                                  where br.Books == bk && br.students == st && st == student
                                  orderby bk.Title
-                                 select new { br.Id, bk.Title, bk.Isbn, bk.Verlag, bk.Autor, st.Name};
+                                 select new { br.Id, bk.B_foto, bk.Title, bk.Isbn, bk.Verlag, bk.Autor};
 
             return await BookBorrowList.ToListAsync();
         }        [HttpDelete("{id}")]        public async Task<ActionResult> DeleteBorrow(int id)
