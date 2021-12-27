@@ -82,7 +82,7 @@ namespace Bvs_API.Controllers
             }
         }        private async Task BorrowCount()
         {
-            var borrowCount = await _context.Student.CountAsync();
+            var borrowCount = await _context.Borrow.CountAsync();
             var numberOverview = await _context.NumberOverview.FirstAsync();
             numberOverview.AnzahlBorrow = borrowCount;
         }    }
