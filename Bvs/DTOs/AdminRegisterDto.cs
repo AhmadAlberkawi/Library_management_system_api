@@ -21,6 +21,7 @@ namespace Bvs_API.DTOs
         [Required]
         public string Rolle { get; set; }
         [Required]
+        [StringLength(15, MinimumLength =4)]
         public string Password { get; set; }
     }
 }

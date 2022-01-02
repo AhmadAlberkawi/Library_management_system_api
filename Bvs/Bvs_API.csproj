@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="user\src\app\errors\" />
+    <Folder Include="user\src\app\_interceptors\" />
     <Folder Include="user\src\app\_modules\" />
     <Folder Include="user\src\app\_guards\" />
   </ItemGroup>
