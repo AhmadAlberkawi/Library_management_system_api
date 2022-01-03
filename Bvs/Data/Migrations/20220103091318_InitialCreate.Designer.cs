@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bvs_API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211122180218_InitialCreate")]
+    [Migration("20220103091318_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,11 +95,21 @@ namespace Bvs_API.Data.Migrations
 
             modelBuilder.Entity("Bvs.Entities.Borrow", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int?>("BooksId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("BorrowedUntil")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("studentsId")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("BooksId");
 

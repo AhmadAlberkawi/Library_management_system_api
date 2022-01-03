@@ -93,11 +93,21 @@ namespace Bvs_API.Data.Migrations
 
             modelBuilder.Entity("Bvs.Entities.Borrow", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int?>("BooksId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("BorrowedUntil")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("studentsId")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("BooksId");
 

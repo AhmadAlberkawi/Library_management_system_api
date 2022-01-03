@@ -46,7 +46,18 @@ namespace Bvs_API.Controllers
                                  from br in _context.Borrow
                                  where br.Books == bk && br.students == st
                                  orderby bk.Title
-                                 select new {br.Id ,bk.B_foto , bk.Title, bk.Isbn , bk.Verlag, bk.Autor, st.Name};
+                                 select new
+                                 {
+                                     br.Id,
+                                     bk.B_foto,
+                                     bk.Title,
+                                     bk.Isbn,
+                                     bk.Verlag,
+                                     bk.Autor,
+                                     st.Name,
+                                     BorrowedUntil = br.BorrowedUntil.ToString("d"),
+                                     Days = br.GetremainingDays()
+                                 };
 
             return await BookBorrowList.ToListAsync();
         }        [HttpGet("{id}")]
@@ -59,14 +70,24 @@ namespace Bvs_API.Controllers
                                  from br in _context.Borrow
                                  where br.Books == bk && br.students == st && st == student
                                  orderby bk.Title
-                                 select new { br.Id, bk.B_foto, bk.Title, bk.Isbn, bk.Verlag, bk.Autor};
+                                 select new
+                                 {
+                                     br.Id,
+                                     bk.B_foto,
+                                     bk.Title,
+                                     bk.Isbn,
+                                     bk.Verlag,
+                                     bk.Autor,
+                                     BorrowedUntil = br.BorrowedUntil.ToString("d"),
+                                     Days = br.GetremainingDays()
+                                 };
 
             return await BookBorrowList.ToListAsync();
         }        [HttpDelete("{id}")]        public async Task<ActionResult> DeleteBorrow(int id)
         {
             Borrow borrow = await _context.Borrow.FindAsync(id);
 
-            if(borrow != null)
+            if (borrow != null)
             {
                 _context.Borrow.Remove(borrow);
                 await _context.SaveChangesAsync();
